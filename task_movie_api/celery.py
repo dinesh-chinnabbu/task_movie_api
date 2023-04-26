@@ -18,6 +18,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'increase-movie-ranks': {
         'task': 'increase_movie_ranks',
-        'schedule': 30.0,
+        'schedule': 300.0,
     },
 }

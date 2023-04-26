@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-6mug5276qv21$78(ermc1$=%ydd78-+=9&bq0l17_&tl(w_!+m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -75,13 +75,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'task_movie_api.wsgi.application'
 
+POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
+POSTGRES_DATABASE = os.environ.get("POSTGRES_DATABASE")
+POSTGRES_USER = os.environ.get("POSTGRES_USER")
+POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': POSTGRES_DATABASE,
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
+        'HOST': POSTGRES_HOST,
+        'PORT': '5432',
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mytestdatabase',
+        'USER': 'mytestuser',
+        'PASSWORD': 'mytestpassword',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -138,7 +154,5 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_ALWAYS_EAGER = True
-
-# MONGO_URL = os.environ.get("MONGO_URL")
-# client = MongoClient(f'mongodb://{MONGO_URL}')
-# movie_db = client.movie_data
+MONGO_URL = os.environ.get("MONGO_URL")
+mongo_client = MongoClient(f'mongodb://{MONGO_URL}')
