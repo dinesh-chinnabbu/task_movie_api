@@ -54,7 +54,7 @@ def create(request, cinema: CinemaSchema = Form(...)):
     if poster:
         cinema_obj.poster.save(poster.name, ImageFile(poster))
     cinema_obj.save()
-    return {'id': cinema_obj.id}
+    return Response({'id': cinema_obj.id}, status=201)
 
 
 @api_v1.get("/cinema_program")
@@ -78,10 +78,8 @@ def read(request):
     collection = settings.mongo_client.movie_db.CinemaProgram
     docs = collection.find({}, projection={'_id': 0}).sort('ranking', pymongo.DESCENDING)
     result = []
-    # import pdb; pdb.set_trace()
     for doc in docs:
         if doc['poster']:
             doc['poster'] = f"{request.scheme}://{request.get_host()}{MEDIA_URL}{doc['poster']}"
-            # doc['poster'] = request.build_absolute_uri(doc['poster'])
         result.append(doc)
     return Response(result)
